@@ -1,1 +1,26 @@
 https://d28dx6y1hfq314.cloudfront.net/33502/12872/el/7/x86_64/repodata/0f98a1d1a8a9a0199ef2ddc7627bdc1d5bc0c34ef5292dab49c5c4fb12af1284-repomd.xml
+
+
+#!/bin/bash
+
+# Website URL
+website="https://example.com"
+
+# Expiry threshold (in seconds)
+threshold=$((5 * 24 * 60 * 60))
+
+# Current timestamp
+current_time=$(date +%s)
+
+# SSL expiry timestamp
+expiry_time=$(openssl s_client -servername example.com -connect example.com:443 -showcerts </dev/null 2>/dev/null | openssl x509 -enddate -noout | awk -F '=' '{print $2}' | xargs -0 date -d)
+
+# Calculate the remaining time
+remaining_time=$((expiry_time - current_time))
+
+# Check if the certificate is within the threshold
+if [ "$remaining_time" -lt "$threshold" ]; then
+    echo "SSL certificate for $website is expiring soon!"
+else
+    echo "SSL certificate for $website is valid."
+fi
