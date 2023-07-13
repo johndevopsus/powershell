@@ -1,0 +1,1 @@
+sudo netstat -nputw | grep ESTABLISHED | awk '{print $5}' | cut -d: -f1 | sort -u | while read IP; do echo -n "$IP "; nslookup $IP | awk -F'=' '/^name/{print $2}'; done
