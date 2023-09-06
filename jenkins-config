@@ -1,1 +1,18 @@
-Test
+# Define the directory where Jenkins job config files are located
+$jenkinsConfigDir = "C:\Path\To\Your\Jenkins\Config\Directory"
+
+# Define the string you want to search for
+$searchString = "YourStringHere"
+
+# Get all Jenkins job config files within the directory
+$jenkinsConfigs = Get-ChildItem -Path $jenkinsConfigDir -Filter "config.xml" -Recurse
+
+# Loop through each config file and search for the specified string
+foreach ($configFile in $jenkinsConfigs) {
+    $content = Get-Content -Path $configFile.FullName
+    foreach ($line in $content) {
+        if ($line -like "$searchString*") {
+            Write-Output "Match found in $($configFile.FullName): $line"
+        }
+    }
+}
