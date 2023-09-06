@@ -1,3 +1,24 @@
+# Define the directory where Jenkins job config files are located
+$jenkinsConfigDir = "C:\Path\To\Your\Jenkins\Config\Directory"
+
+# Define the string you want to search for
+$searchString = "YourStringHere"
+
+# Get all Jenkins job config files within the directory
+$jenkinsConfigs = Get-ChildItem -Path $jenkinsConfigDir -Filter "config.xml"
+
+# Loop through each config file and search for lines starting with the specified string
+foreach ($configFile in $jenkinsConfigs) {
+    $content = Get-Content -Path $configFile.FullName
+    foreach ($line in $content) {
+        if ($line -match "^$searchString") {
+            Write-Output "Match found in $($configFile.FullName): $line"
+        }
+    }
+}
+
+
+
 You can use PowerShell to search for lines starting with a given string in all Jenkins job configuration files within a directory. Here’s a sample script to do that:
 
 # Define the directory where Jenkins job config files are located
