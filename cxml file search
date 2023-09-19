@@ -1,0 +1,17 @@
+# Set the directory where the .cxml files are located
+$directoryPath = "C:\Path\To\Your\Directory"
+
+# Get all .cxml files in the directory
+$cxmlFiles = Get-ChildItem -Path $directoryPath -Filter *.cxml
+
+# Iterate through each .cxml file
+foreach ($file in $cxmlFiles) {
+    # Read the content of the file and filter lines that start with "target"
+    $targetLines = Get-Content $file.FullName | Where-Object { $_ -like 'target*' }
+
+    # Print the file name and the target lines
+    Write-Host "File: $($file.Name)"
+    Write-Host "Target lines:"
+    $targetLines
+    Write-Host "------------------------"
+}
