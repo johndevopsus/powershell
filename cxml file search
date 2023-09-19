@@ -15,3 +15,36 @@ foreach ($file in $cxmlFiles) {
     $targetLines
     Write-Host "------------------------"
 }
+
+# Set the directory where the .cxml files are located
+$directoryPath = "C:\data\jenkins_home\jobs\AppDev\jobs"
+
+# Get all .xml files in the directory
+$xmlFiles = Get-ChildItem -Path $directoryPath -Recurse -Filter config.xml
+
+# Iterate through each .xml file
+foreach ($file in $xmlFiles) {
+    # Read the content of the file and filter lines that start with "$targetMachineList"
+    $targetLines = Get-Content $file.FullName | Where-Object { $_ -like '$targetMachineList*' }
+
+    # Print the file name and the target lines
+    #Write-Host "File: $($file.Name)"
+    #Write-Host "Target lines:"
+    $targetLines
+    #Write-Host "------------------------"
+
+
+
+
+$csv = Import-Csv C:\Users\Webteambuilduser\Desktop\servername.csv
+
+
+
+$csv | ForEach-Object {
+
+
+    $servername = $csv.ServerName
+    Test-Connection -ComputerName $servername -Count 1
+
+
+}
