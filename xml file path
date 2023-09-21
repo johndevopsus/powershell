@@ -16,3 +16,33 @@ foreach ($xmlFile in $xmlFiles) {
     $linesWithE
     Write-Host "------------------------"
 }
+
+
+--------------- With Line Number ---------------
+
+# Set the directory path to search for .xml files
+$directoryPath = "C:\Path\To\Your\Directory"
+
+# Get all .xml files recursively from the specified directory
+$xmlFiles = Get-ChildItem -Path $directoryPath -Recurse -Include *.xml
+
+# Iterate through each XML file
+foreach ($xmlFile in $xmlFiles) {
+    # Check if the file contains the specified text
+    $containsText = Get-Content $xmlFile.FullName | Select-String -Pattern "E:\"
+
+    if ($containsText) {
+        # Output the file path
+        Write-Host "File Path: $($xmlFile.FullName)"
+
+        # Iterate through each line in the file to find the line number and line containing the text
+        $content = Get-Content $xmlFile.FullName
+        for ($i = 0; $i -lt $content.Length; $i++) {
+            if ($content[$i] -like "*E:\*") {
+                Write-Host "Line Number: $($i + 1)"
+                Write-Host "Line: $($content[$i])"
+                Write-Host "------------------------"
+            }
+        }
+    }
+}
