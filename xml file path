@@ -1,0 +1,18 @@
+# Set the directory where you want to search for .xml files
+$directoryPath = "C:\Path\To\Your\Directory"
+
+# Get all .xml files in the directory and its subdirectories that contain "E:\"
+$xmlFiles = Get-ChildItem -Path $directoryPath -Recurse -Filter *.xml | 
+            Where-Object {Select-String -Path $_.FullName -Pattern 'E:\\'}
+
+# Iterate through each matching .xml file
+foreach ($xmlFile in $xmlFiles) {
+    # Read the content of the file and filter lines that contain "E:\"
+    $linesWithE = Get-Content $xmlFile.FullName | Where-Object { $_ -like '*E:\*' }
+
+    # Print the file path and lines containing "E:\"
+    Write-Host "File: $($xmlFile.FullName)"
+    Write-Host "Lines containing 'E\':"
+    $linesWithE
+    Write-Host "------------------------"
+}
