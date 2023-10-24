@@ -1,0 +1,23 @@
+pipeline{
+    
+    agent {label 'jenkinsnode2-QA'}
+    environment {
+        QA_WOLF_BEARER = credentials('QAWolfToken') 
+    }
+    
+    stages {
+        stage('Hello QAWolf') {
+            steps {
+                script {
+                    final String url = "https://app.qawolf.com/api/webhooks/deploy_success"
+                    
+                   {
+                        final String response = sh(script: "curl -H 'Authorization: bearer %QA_WOLF_BEARER%' -H 'Content-Type: application/json' $url", returnStdout: true).trim() 
+                        
+                        echo response
+                    }
+                }
+            }
+        }
+    }
+}
