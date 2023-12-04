@@ -85,3 +85,54 @@ $results | Format-Table -AutoSize | Out-File -FilePath $outputFilePath
 
 Write-Host "Results exported to $outputFilePath"
 
+
+
+
+-------
+
+
+# Set the directory path
+$directoryPath = "C:\Path\To\Your\Directory"
+
+# Set the search string and the new string to update
+$searchString = "YourSearchString"
+$newString = "YourNewString"
+
+# Set the output file path
+$outputFilePath = "C:\Path\To\Your\Output\Result.txt"
+
+# Get all *.xml files in the directory and subdirectories
+$xmlFiles = Get-ChildItem -Path $directoryPath -Filter *.xml -Recurse
+
+# Initialize an array to store the results
+$results = @()
+
+# Iterate through each XML file
+foreach ($xmlFile in $xmlFiles) {
+    # Read the content of the file
+    $content = Get-Content -Path $xmlFile.FullName
+
+    # Search for the string in each line
+    $matchingLines = $content | Where-Object { $_ -like "*$searchString*" }
+
+    # Iterate through matching lines and update the file
+    foreach ($line in $matchingLines) {
+        $lineNumber = $content.IndexOf($line) + 1
+        $updatedLine = $line -replace [regex]::Escape($searchString), $newString
+
+        # Update the content of the file
+        $content[$lineNumber - 1] = $updatedLine
+
+        # Add the result to the array
+        $results += [PSCustomObject]@{
+            Path = $xmlFile.FullName
+            Line = $line
+        }
+    }
+
+    # Save the updated content back to the file
+    $content | Set-Content -Path $xmlFile.FullName
+}
+
+# Export the results to a text file
+$results | Format-Table -AutoSize | Out-File -FilePath $outputFilePath
